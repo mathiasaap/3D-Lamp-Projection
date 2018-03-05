@@ -1,9 +1,8 @@
 from PIL import Image
-#im = Image.open("moon_small.jpeg")
-im = Image.open("star.png")
+im = Image.open("branch_smaller.jpg")
+#im = Image.open("blanksmall.png")
 width, height = im.size
 print(width)
-
 projected = Image.new('RGB', (width, height), (255, 0, 0))
 projectedPixels = projected.load()
 
@@ -38,9 +37,9 @@ sphere_r = 1
 
 image_size = sphere_r * 5
 vertical_dist = sphere_r * 3
-COLOR_THRESHOLD = 200
-THINNESS = 0.96
-EDGE_LENGTH = 0.10
+COLOR_THRESHOLD = 600
+THINNESS = 0.97
+EDGE_LENGTH = 0.12
 
 def checkAndAddTriangle(location):
     global currentIndex
@@ -87,11 +86,9 @@ for x in range(width):
             pixel_origin = im.getpixel((x, y))
             pixel_up = im.getpixel((x, y-1))
             pixel_left = im.getpixel((x-1, y))
-            pixel_leftup = im.getpixel((x-1, y-1))
             checkAndAddTriangle((x,y))
             checkAndAddTriangle((x,y-1))
             checkAndAddTriangle((x-1,y))
-            checkAndAddTriangle((x-1,y-1))
             """
             if sum(pixel_origin) < COLOR_THRESHOLD and  sum(pixel_up) < COLOR_THRESHOLD and sum(pixel_left) < COLOR_THRESHOLD:
                 indices.append((coords2Index[(x,y)], coords2Index[(x,y-1)], coords2Index[(x-1,y)]))
@@ -109,7 +106,7 @@ for x in range(width):
 
             """
             if sum(pixel_origin) < COLOR_THRESHOLD :
-                indices.append((coords2Index[(x,y)], coords2Index[(x,y-1)], coords2Index[(x-1,y)]))
+                indices.append((coords2Index[(x-1,y)], coords2Index[(x,y-1)], coords2Index[(x,y)]))
                 indices.append((coords2IndexInner[(x,y)], coords2IndexInner[(x,y-1)], coords2IndexInner[(x-1,y)]))
 
                 if sum(pixel_up) >= COLOR_THRESHOLD:
@@ -131,13 +128,13 @@ for x in range(width):
                 checkAndAddTriangleEdge((x,y))
                 checkAndAddTriangleEdge((x,y-1))
 
-                indices.append((coords2Index[(x,y)], coords2Index[(x,y-1)], coords2IndexEdge[(x,y)]))
+                indices.append((coords2IndexEdge[(x,y)], coords2Index[(x,y-1)], coords2Index[(x,y)]))
                 indices.append((coords2IndexEdge[(x,y)], coords2IndexEdge[(x,y-1)], coords2Index[(x,y-1)]))
 
                 indices.append((coords2IndexInner[(x,y)], coords2IndexInner[(x,y-1)], coords2IndexInnerEdge[(x,y)]))
-                indices.append((coords2IndexInnerEdge[(x,y)], coords2IndexInnerEdge[(x,y-1)], coords2IndexInner[(x,y-1)]))
+                indices.append((coords2IndexInner[(x,y-1)], coords2IndexInnerEdge[(x,y-1)], coords2IndexInnerEdge[(x,y)]))
 
-                indices.append((coords2IndexEdge[(x,y)], coords2IndexEdge[(x,y-1)], coords2IndexInnerEdge[(x,y)]))
+                indices.append((coords2IndexInnerEdge[(x,y)], coords2IndexEdge[(x,y-1)], coords2IndexEdge[(x,y)]))
                 indices.append((coords2IndexInnerEdge[(x,y)], coords2IndexInnerEdge[(x,y-1)], coords2IndexEdge[(x,y-1)]))
 
 
@@ -148,13 +145,13 @@ for x in range(width):
                 checkAndAddTriangleEdge((x-1,y))
 
                 indices.append((coords2Index[(x,y)], coords2Index[(x-1,y)], coords2IndexEdge[(x,y)]))
-                indices.append((coords2IndexEdge[(x,y)], coords2IndexEdge[(x-1,y)], coords2Index[(x-1,y)]))
+                indices.append((coords2Index[(x-1,y)], coords2IndexEdge[(x-1,y)], coords2IndexEdge[(x,y)]))
 
-                indices.append((coords2IndexInner[(x,y)], coords2IndexInner[(x-1,y)], coords2IndexInnerEdge[(x,y)]))
+                indices.append((coords2IndexInnerEdge[(x,y)], coords2IndexInner[(x-1,y)], coords2IndexInner[(x,y)]))
                 indices.append((coords2IndexInnerEdge[(x,y)], coords2IndexInnerEdge[(x-1,y)], coords2IndexInner[(x-1,y)]))
 
                 indices.append((coords2IndexEdge[(x,y)], coords2IndexEdge[(x-1,y)], coords2IndexInnerEdge[(x,y)]))
-                indices.append((coords2IndexInnerEdge[(x,y)], coords2IndexInnerEdge[(x-1,y)], coords2IndexEdge[(x-1,y)]))
+                indices.append((coords2IndexEdge[(x-1,y)], coords2IndexInnerEdge[(x-1,y)], coords2IndexInnerEdge[(x,y)]))
 
 
 
@@ -176,7 +173,7 @@ for x in range(width):
                 coords2Index[(x,y)]
                 coords2Index[(x,y+1)]
                 coords2Index[(x+1,y)]
-                indices.append((coords2Index[(x,y)], coords2Index[(x,y+1)], coords2Index[(x+1,y)]))
+                indices.append((coords2Index[(x+1,y)], coords2Index[(x,y+1)], coords2Index[(x,y)]))
                 indices.append((coords2IndexInner[(x,y)], coords2IndexInner[(x,y+1)], coords2IndexInner[(x+1,y)]))
 
                 if sum(pixel_down) >= COLOR_THRESHOLD:
@@ -212,13 +209,13 @@ for x in range(width):
                 checkAndAddTriangleEdge((x,y))
                 checkAndAddTriangleEdge((x,y+1))
 
-                indices.append((coords2Index[(x,y)], coords2Index[(x,y+1)], coords2IndexEdge[(x,y)]))
+                indices.append((coords2IndexEdge[(x,y)], coords2Index[(x,y+1)], coords2Index[(x,y)]))
                 indices.append((coords2IndexEdge[(x,y)], coords2IndexEdge[(x,y+1)], coords2Index[(x,y+1)]))
 
                 indices.append((coords2IndexInner[(x,y)], coords2IndexInner[(x,y+1)], coords2IndexInnerEdge[(x,y)]))
-                indices.append((coords2IndexInnerEdge[(x,y)], coords2IndexInnerEdge[(x,y+1)], coords2IndexInner[(x,y+1)]))
+                indices.append((coords2IndexInner[(x,y+1)], coords2IndexInnerEdge[(x,y+1)], coords2IndexInnerEdge[(x,y)]))
 
-                indices.append((coords2IndexEdge[(x,y)], coords2IndexEdge[(x,y+1)], coords2IndexInnerEdge[(x,y)]))
+                indices.append((coords2IndexInnerEdge[(x,y)], coords2IndexEdge[(x,y+1)], coords2IndexEdge[(x,y)]))
                 indices.append((coords2IndexInnerEdge[(x,y)], coords2IndexInnerEdge[(x,y+1)], coords2IndexEdge[(x,y+1)]))
 
             if y >= height -1 and x < width -1:
@@ -228,13 +225,13 @@ for x in range(width):
                 checkAndAddTriangleEdge((x+1,y))
 
                 indices.append((coords2Index[(x,y)], coords2Index[(x+1,y)], coords2IndexEdge[(x,y)]))
-                indices.append((coords2IndexEdge[(x,y)], coords2IndexEdge[(x+1,y)], coords2Index[(x+1,y)]))
+                indices.append((coords2Index[(x+1,y)], coords2IndexEdge[(x+1,y)], coords2IndexEdge[(x,y)]))
 
-                indices.append((coords2IndexInner[(x,y)], coords2IndexInner[(x+1,y)], coords2IndexInnerEdge[(x,y)]))
+                indices.append((coords2IndexInnerEdge[(x,y)], coords2IndexInner[(x+1,y)], coords2IndexInner[(x,y)]))
                 indices.append((coords2IndexInnerEdge[(x,y)], coords2IndexInnerEdge[(x+1,y)], coords2IndexInner[(x+1,y)]))
 
                 indices.append((coords2IndexEdge[(x,y)], coords2IndexEdge[(x+1,y)], coords2IndexInnerEdge[(x,y)]))
-                indices.append((coords2IndexInnerEdge[(x,y)], coords2IndexInnerEdge[(x+1,y)], coords2IndexEdge[(x+1,y)]))
+                indices.append((coords2IndexEdge[(x+1,y)], coords2IndexInnerEdge[(x+1,y)], coords2IndexInnerEdge[(x,y)]))
 
 
 
@@ -249,7 +246,7 @@ def createObj(triangles, indices):
     return objectStr
 
 objectData = createObj(triangles, indices)
-with open("small_star.obj", 'w') as file:
+with open("branch.obj", 'w') as file:
     file.write(objectData)
 
 
